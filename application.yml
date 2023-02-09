@@ -1,0 +1,54 @@
+server:
+  port: 0
+spring:
+  datasource:
+    dbcp2:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    password: Rocket@2019
+    url: jdbc:mysql://localhost:3306/ems
+    username: root
+  jpa:
+    format: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8780/eureka
+      
+    
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+      
+  endpoints:
+    web:
+      exposure:
+        include: health
+        
+  endpoint:
+    health:
+      show-details: always
+      
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      getProductAvailability:
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 6s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        sliding-window-type: count-based
+    
+    
+    
